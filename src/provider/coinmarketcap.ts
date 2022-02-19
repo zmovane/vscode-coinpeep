@@ -89,7 +89,8 @@ export class CoinmarketcapProvider implements vscode.TreeDataProvider<Item> {
     const iconPath = percent.gt(ZERO)
       ? this._iconPath("up.png")
       : this._iconPath("down.png");
-    return new Item(label, iconPath, priceDisplay);
+    const pair = `${coin.symbol.toUpperCase()}${this.stableCoin}`;
+    return new Item(pair, label, iconPath, priceDisplay);
   }
 
   private _iconPath(iconName: string): string {
@@ -125,9 +126,19 @@ interface USDT {
 }
 
 class Item extends vscode.TreeItem {
-  constructor(label: string, iconPath: vscode.Uri | string, price: string) {
+  constructor(
+    pair: string,
+    label: string,
+    iconPath: vscode.Uri | string,
+    price: string
+  ) {
     super(label, vscode.TreeItemCollapsibleState.None);
     this.iconPath = iconPath;
     this.description = price;
+    this.command = {
+      title: "CoinMarketCap",
+      command: "coinmarketcapTreeView.clickItem",
+      arguments: [pair],
+    };
   }
 }
