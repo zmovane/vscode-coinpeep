@@ -1,45 +1,95 @@
 {
   "name": "coinpeep",
-	"displayName": "coinpeep",
-	"description": "A vscode extension for help to take a quick peep of cryptocurrency prices as you code",
-	"version": "0.0.1",
-	"engines": {
-		"vscode": "^1.64.0"
-	},
-	"categories": [
-		"Other"
-	],
-	"activationEvents": [
-        "onCommand:coinpeep.helloWorld"
-	],
-	"main": "./out/extension.js",
-	"contributes": {
-		"commands": [
-			{
-				"command": "coinpeep.helloWorld",
-				"title": "Hello World"
-			}
-		]
-	},
-	"scripts": {
-		"vscode:prepublish": "npm run compile",
-		"compile": "tsc -p ./",
-		"watch": "tsc -watch -p ./",
-		"pretest": "npm run compile && npm run lint",
-		"lint": "eslint src --ext ts",
-		"test": "node ./out/test/runTest.js"
-	},
-	"devDependencies": {
-		"@types/vscode": "^1.64.0",
-		"@types/glob": "^7.2.0",
-		"@types/mocha": "^9.0.0",
-		"@types/node": "14.x",
-		"@typescript-eslint/eslint-plugin": "^5.9.1",
-		"@typescript-eslint/parser": "^5.9.1",
-		"eslint": "^8.6.0",
-		"glob": "^7.2.0",
-		"mocha": "^9.1.3",
-		"typescript": "^4.5.4",
-		"@vscode/test-electron": "^2.0.3"
-	}
+  "displayName": "coinpeep",
+  "description": "A vscode extension for help to take a quick peep of cryptocurrency prices as you code",
+  "version": "0.0.1",
+  "publisher": "amovane",
+  "engines": {
+    "vscode": "^1.64.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onView:coinmarketcapTreeView"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "viewsWelcome": [
+      {
+        "view": "coinmarketcapTreeView",
+        "contents": "CoinMarketCap API Key Not found [learn more](https://pro.coinmarketcap.com/).\n[Open Settings](command:workbench.action.openSettings)",
+        "when": "config.coinpeep.coinmarketcap.apiKey == ''"
+      }
+    ],
+    "configuration": {
+      "properties": {
+        "coinpeep.coinmarketcap.apiKey": {
+          "type": "string",
+          "description": "Your CoinMarketCap API key."
+        }
+      }
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "coinpeep",
+          "title": "Coinpeep",
+          "icon": "resources/light/coinpeep.png"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "coinmarketcapTreeView.refreshEntry",
+        "title": "Refresh",
+        "icon": {
+          "light": "resources/light/refresh.svg",
+          "dark": "resources/dark/refresh.svg"
+        }
+      }
+    ],
+    "views": {
+      "coinpeep": [
+        {
+          "id": "coinmarketcapTreeView",
+          "name": "coinmarketcap"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "coinmarketcapTreeView.refreshEntry",
+          "when": "view == coinmarketcapTreeView",
+          "group": "navigation"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/glob": "^7.2.0",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "14.x",
+    "@types/vscode": "^1.64.0",
+    "@typescript-eslint/eslint-plugin": "^5.9.1",
+    "@typescript-eslint/parser": "^5.9.1",
+    "@vscode/test-electron": "^2.0.3",
+    "eslint": "^8.6.0",
+    "glob": "^7.2.0",
+    "mocha": "^9.1.3",
+    "typescript": "^4.5.4"
+  },
+  "dependencies": {
+    "axios": "^0.26.0",
+    "bignumber.js": "^9.0.2"
+  }
 }
