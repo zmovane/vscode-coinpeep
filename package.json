@@ -89,7 +89,9 @@
     "typescript": "^4.5.4"
   },
   "dependencies": {
+    "amplitude": "^6.0.0",
     "axios": "^0.26.0",
-    "bignumber.js": "^9.0.2"
+    "bignumber.js": "^9.0.2",
+    "public-ip": "^5.0.0"
   }
 }
