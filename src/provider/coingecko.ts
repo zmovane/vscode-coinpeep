@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import * as path from "path";
 import request from "../utils/http";
 import { ZERO, Decimal } from "../utils/bignumber";
-
+import { Quote } from "../entity/coingecko";
 export class CoingeckoProvider implements vscode.TreeDataProvider<Item> {
   private _onDidChangeTreeData: vscode.EventEmitter<
     Item | undefined | null | void
@@ -78,18 +78,6 @@ export class CoingeckoProvider implements vscode.TreeDataProvider<Item> {
     return status >= 200 && status < 300;
   }
 }
-
-interface Quote {
-  symbol: string;
-  name: string;
-  image: string;
-  current_price: string;
-  price_change_percentage_24h: string;
-  market_cap_change_percentage_24h: string;
-  total_volume: string;
-  market_cap: string;
-}
-
 class Item extends vscode.TreeItem {
   constructor(
     pair: string,

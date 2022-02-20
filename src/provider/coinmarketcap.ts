@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import * as path from "path";
 import request from "../utils/http";
 import { ZERO, Decimal } from "../utils/bignumber";
+import { Coin, Response } from "../entity/coinmarketcap";
 export class CoinmarketcapProvider implements vscode.TreeDataProvider<Item> {
   private _onDidChangeTreeData: vscode.EventEmitter<
     Item | undefined | null | void
@@ -14,10 +15,7 @@ export class CoinmarketcapProvider implements vscode.TreeDataProvider<Item> {
   private stableCoin = "USDT";
   private httpUrl = "https://pro-api.coinmarketcap.com/v1";
 
-  constructor(
-    extensionID: string,
-    apiKey: string | undefined
-  ) {
+  constructor(extensionID: string, apiKey: string | undefined) {
     this.apiKey = apiKey;
     this.extensionID = extensionID;
 
@@ -98,29 +96,6 @@ export class CoinmarketcapProvider implements vscode.TreeDataProvider<Item> {
   private _isOk(status: number, otherCond: Function) {
     return status >= 200 && status < 300 && otherCond();
   }
-}
-interface Response<T> {
-  data: T[];
-  status: Status;
-}
-interface Status {
-  error_code: number;
-  error_message: string;
-}
-interface Coin {
-  name: string;
-  symbol: string;
-  quote: Quote;
-}
-interface Quote {
-  USDT: USDT;
-}
-interface USDT {
-  price: string;
-  volume_24h: string;
-  percent_change_24h: string;
-  percent_change_7d: string;
-  market_cap: string;
 }
 
 class Item extends vscode.TreeItem {
