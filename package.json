@@ -29,9 +29,23 @@
           "type": "string",
           "description": "Your CoinMarketCap API key."
         },
-        "coinpeep.refreshInterval":{
-          "type":"integer",
-          "description": "Refresh Interval in milliseconds (default is 10000)"
+        "coinpeep.refreshInterval": {
+          "type": "integer",
+          "description": "Refresh Interval in milliseconds (default is 10000)",
+          "default": 10000
+        },
+        "coinpeep.statusbar.enable": {
+          "type": "boolean",
+          "description": "Display statusbar",
+          "default": true
+        },
+        "coinpeep.statusbar.coinIds": {
+          "type": "array",
+          "description": "Prices show in statusbar (default coin ids is [\"bitcoin\",\"ethereum\"])\n# coin id is use for coingecko API, just find what you need on https://api.coingecko.com/api/v3/coins/list",
+          "default": [
+            "bitcoin",
+            "ethereum"
+          ]
         }
       }
     },

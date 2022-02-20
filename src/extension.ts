@@ -4,6 +4,7 @@ import { CoinmarketcapProvider } from "./provider/coinmarketcap";
 import { tradingviewEmbedded } from "./template/tradingview";
 import { Config } from "./utils/config";
 import ReusedWebviewPanel from "./webview/ReusedWebviewPanel";
+import { StatusBar } from "./widget/statusbar";
 
 const MIN_INTERVAL: number = 3000;
 const MAX_INTERVAL: number = 20_000;
@@ -16,6 +17,7 @@ export function activate(context: vscode.ExtensionContext) {
   const confInterval: number =
     Config.get("refreshInterval") ?? DEFAULT_INTERVAL;
 
+  const statusbar = new StatusBar();
   const coingeckoProvider = new CoingeckoProvider(extensionID);
   const coinmarketcapProvider = new CoinmarketcapProvider(extensionID);
 
@@ -23,6 +25,7 @@ export function activate(context: vscode.ExtensionContext) {
   registerCoinmarketcapComponents(coinmarketcapProvider);
 
   const cronTask = () => {
+    statusbar.refresh();
     coingeckoProvider.refresh();
     coinmarketcapProvider.refresh();
   };
@@ -43,7 +46,12 @@ export function activate(context: vscode.ExtensionContext) {
             looper = setInterval(cronTask, intervalInMills);
           }
         }
-
+        if (e.affectsConfiguration(`${extensionID}.statusbar.enable`)) {
+          statusbar.toggle();
+        }
+        if (e.affectsConfiguration(`${extensionID}.statusbar.coinIds`)) {
+          statusbar.updateCoinIds();
+        }
         if (e.affectsConfiguration(`${extensionID}.coinmarketcap.apiKey`)) {
           coinmarketcapProvider.updateAPIKey();
         }
