@@ -2,8 +2,9 @@
   "name": "coinpeep",
   "displayName": "Coinpeep",
   "description": "A vscode extension for help to take a quick peep of cryptocurrency prices as you code",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publisher": "amovane",
+  "icon":"resources/icon.png",
   "engines": {
     "vscode": "^1.64.0"
   },
