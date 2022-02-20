@@ -3,7 +3,7 @@ import { CoingeckoProvider } from "./provider/coingecko";
 import { CoinmarketcapProvider } from "./provider/coinmarketcap";
 import { tradingviewEmbedded } from "./template/tradingview";
 import { Config } from "./utils/config";
-import ReusedWebviewPanel from "./webview/ReusedWebviewPanel";
+import ReusedWebviewPanel from "./widget/webview/ReusedWebviewPanel";
 import { StatusBar } from "./widget/statusbar";
 
 const MIN_INTERVAL: number = 3000;
