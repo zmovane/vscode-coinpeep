@@ -19,8 +19,6 @@ export function activate(context: vscode.ExtensionContext) {
     .getConfiguration(extensionID)
     .get("coinmarketcap.apiKey");
 
-  vscode.window.showErrorMessage(confInterval.toString());
-
   const coingeckoProvider = new CoingeckoProvider(extensionID);
   const coinmarketcapProvider = new CoinmarketcapProvider(extensionID, apiKey);
 
