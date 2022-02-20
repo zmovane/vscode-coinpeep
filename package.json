@@ -1,6 +1,6 @@
 {
   "name": "coinpeep",
-  "displayName": "coinpeep",
+  "displayName": "Coinpeep",
   "description": "A vscode extension for help to take a quick peep of cryptocurrency prices as you code",
   "version": "0.0.1",
   "publisher": "amovane",
@@ -10,6 +10,10 @@
   "categories": [
     "Other"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/amovane/vscode-coinpeep"
+  },
   "activationEvents": [
     "onView:coingeckoTreeView",
     "onView:coinmarketcapTreeView"
