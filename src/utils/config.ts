@@ -1,12 +1,12 @@
 import { workspace } from "vscode";
 
-const extensionID = "coinpeep";
+const extensionName = "coinpeep";
 export class Config {
   static get(key: string, defaultValue?: any): any {
-    return workspace.getConfiguration(extensionID).get(key) ?? defaultValue;
+    return workspace.getConfiguration(extensionName).get(key) ?? defaultValue;
   }
 
   static set(key: string, value: Array<any> | string | number | Object) {
-    return workspace.getConfiguration(extensionID).update(key, value, true);
+    return workspace.getConfiguration(extensionName).update(key, value, true);
   }
 }

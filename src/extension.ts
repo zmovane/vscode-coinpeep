@@ -9,7 +9,7 @@ import { StatusBar } from "./widget/statusbar";
 const MIN_INTERVAL: number = 3000;
 const MAX_INTERVAL: number = 20_000;
 const DEFAULT_INTERVAL: number = 10_000;
-const extensionID: string = "coinpeep";
+const extensionID: string = "amovane.coinpeep";
 
 let looper: NodeJS.Timer | null = null;
 
