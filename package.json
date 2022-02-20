@@ -28,6 +28,10 @@
         "coinpeep.coinmarketcap.apiKey": {
           "type": "string",
           "description": "Your CoinMarketCap API key."
+        },
+        "coinpeep.refreshInterval":{
+          "type":"integer",
+          "description": "Refresh Interval in milliseconds (default is 10000)"
         }
       }
     },

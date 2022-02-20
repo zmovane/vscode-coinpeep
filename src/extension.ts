@@ -1,42 +1,56 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode";
 import { CoingeckoProvider } from "./provider/coingecko";
 import { CoinmarketcapProvider } from "./provider/coinmarketcap";
 import { tradingviewEmbedded } from "./template/tradingview";
 import ReusedWebviewPanel from "./webview/ReusedWebviewPanel";
 
+const MIN_INTERVAL: number = 3000;
+const MAX_INTERVAL: number = 20_000;
+const DEFAULT_INTERVAL: number = 10_000;
 const extensionID: string = "coinpeep";
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
+
+let looper: NodeJS.Timer | null = null;
+
 export function activate(context: vscode.ExtensionContext) {
-  setupCoingeckoComponents();
-  setupCoinmarketcapComponents();
+  const confInterval: number =
+    vscode.workspace.getConfiguration(extensionID).get("refreshInterval") ?? 10;
+
+  const apiKey: string | undefined = vscode.workspace
+    .getConfiguration(extensionID)
+    .get("coinmarketcap.apiKey");
+
+  vscode.window.showErrorMessage(confInterval.toString());
+
+  const coingeckoProvider = new CoingeckoProvider(extensionID);
+  const coinmarketcapProvider = new CoinmarketcapProvider(extensionID, apiKey);
+
+  registerCoingeckoComponents(coingeckoProvider);
+  registerCoinmarketcapComponents(coinmarketcapProvider);
+
+  const cronTask = () => {
+    coingeckoProvider.refresh();
+    coinmarketcapProvider.refresh();
+  };
+
+  const intervalInMills = Math.max(
+    MIN_INTERVAL,
+    Math.min(confInterval === 0 ? DEFAULT_INTERVAL : confInterval, MAX_INTERVAL)
+  );
+  looper = setInterval(cronTask, intervalInMills);
   // call the constructor again if the configuration changes
   context.subscriptions.push(
-    vscode.workspace.onDidChangeConfiguration(setupCoinmarketcapComponents)
+    vscode.workspace.onDidChangeConfiguration(() => {
+      registerCoingeckoComponents(coingeckoProvider);
+      registerCoinmarketcapComponents(coinmarketcapProvider);
+    })
   );
 }
 
-function setupCoinmarketcapComponents() {
-  const apiKey: string | undefined = vscode.workspace
-    .getConfiguration("extensionName")
-    .get("coinmarketcap.apiKey");
-
-  const coinmarketcapProvider = new CoinmarketcapProvider(
-    extensionID,
-    apiKey
-  );
-
-  vscode.window.registerTreeDataProvider(
-    "coinmarketcapTreeView",
-    coinmarketcapProvider
-  );
-
+function registerCoinmarketcapComponents(provider: CoinmarketcapProvider) {
+  vscode.window.registerTreeDataProvider("coinmarketcapTreeView", provider);
   vscode.commands.registerCommand("coinmarketcapTreeView.refreshEntry", () =>
-    coinmarketcapProvider.refresh()
+    provider.refresh()
   );
-
   vscode.commands.registerCommand(
     "coinmarketcapTreeView.clickItem",
     (symbol) => {
@@ -45,16 +59,11 @@ function setupCoinmarketcapComponents() {
   );
 }
 
-function setupCoingeckoComponents() {
-  const coingeckoProvider = new CoingeckoProvider(extensionID);
-  vscode.window.registerTreeDataProvider(
-    "coingeckoTreeView",
-    coingeckoProvider
-  );
+function registerCoingeckoComponents(provider: CoingeckoProvider) {
+  vscode.window.registerTreeDataProvider("coingeckoTreeView", provider);
   vscode.commands.registerCommand("coingeckoTreeView.refreshEntry", () =>
-    coingeckoProvider.refresh()
+    provider.refresh()
   );
-
   vscode.commands.registerCommand("coingeckoTreeView.clickItem", (symbol) => {
     createWebviewPannel([symbol, "BINANCE"]);
   });
@@ -74,4 +83,9 @@ function createWebviewPannel(args: string[]) {
 }
 
 // this method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() {
+  if (looper) {
+    clearInterval(looper);
+    looper = null;
+  }
+}
