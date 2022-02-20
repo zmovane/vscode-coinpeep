@@ -3,6 +3,7 @@ import * as path from "path";
 import request from "../utils/http";
 import { ZERO, Decimal } from "../utils/bignumber";
 import { Coin, Response } from "../entity/coinmarketcap";
+import { Config } from "../utils/config";
 export class CoinmarketcapProvider implements vscode.TreeDataProvider<Item> {
   private _onDidChangeTreeData: vscode.EventEmitter<
     Item | undefined | null | void
@@ -15,8 +16,8 @@ export class CoinmarketcapProvider implements vscode.TreeDataProvider<Item> {
   private stableCoin = "USDT";
   private httpUrl = "https://pro-api.coinmarketcap.com/v1";
 
-  constructor(extensionID: string, apiKey: string | undefined) {
-    this.apiKey = apiKey;
+  constructor(extensionID: string) {
+    this.apiKey = Config.get("coinmarketcap.apiKey");
     this.extensionID = extensionID;
 
     if (!this.apiKey) {
@@ -49,6 +50,11 @@ export class CoinmarketcapProvider implements vscode.TreeDataProvider<Item> {
 
   refresh(): void {
     this._onDidChangeTreeData.fire();
+  }
+
+  updateAPIKey() {
+    this.apiKey = Config.get("coinmarketcap.apiKey");
+    this.refresh();
   }
 
   private async _getItems(): Promise<Item[]> {

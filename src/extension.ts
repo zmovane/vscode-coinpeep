@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import { CoingeckoProvider } from "./provider/coingecko";
 import { CoinmarketcapProvider } from "./provider/coinmarketcap";
 import { tradingviewEmbedded } from "./template/tradingview";
+import { Config } from "./utils/config";
 import ReusedWebviewPanel from "./webview/ReusedWebviewPanel";
 
 const MIN_INTERVAL: number = 3000;
@@ -13,15 +14,10 @@ let looper: NodeJS.Timer | null = null;
 
 export function activate(context: vscode.ExtensionContext) {
   const confInterval: number =
-    vscode.workspace.getConfiguration(extensionID).get("refreshInterval") ??
-    DEFAULT_INTERVAL;
-
-  const apiKey: string | undefined = vscode.workspace
-    .getConfiguration(extensionID)
-    .get("coinmarketcap.apiKey");
+    Config.get("refreshInterval") ?? DEFAULT_INTERVAL;
 
   const coingeckoProvider = new CoingeckoProvider(extensionID);
-  const coinmarketcapProvider = new CoinmarketcapProvider(extensionID, apiKey);
+  const coinmarketcapProvider = new CoinmarketcapProvider(extensionID);
 
   registerCoingeckoComponents(coingeckoProvider);
   registerCoinmarketcapComponents(coinmarketcapProvider);
@@ -38,10 +34,21 @@ export function activate(context: vscode.ExtensionContext) {
   looper = setInterval(cronTask, intervalInMills);
   // call the constructor again if the configuration changes
   context.subscriptions.push(
-    vscode.workspace.onDidChangeConfiguration(() => {
-      registerCoingeckoComponents(coingeckoProvider);
-      registerCoinmarketcapComponents(coinmarketcapProvider);
-    })
+    vscode.workspace.onDidChangeConfiguration(
+      (e: vscode.ConfigurationChangeEvent) => {
+        if (e.affectsConfiguration(`${extensionID}.refreshInterval`)) {
+          if (looper) {
+            clearInterval(looper);
+            looper = null;
+            looper = setInterval(cronTask, intervalInMills);
+          }
+        }
+
+        if (e.affectsConfiguration(`${extensionID}.coinmarketcap.apiKey`)) {
+          coinmarketcapProvider.updateAPIKey();
+        }
+      }
+    )
   );
 }
 
