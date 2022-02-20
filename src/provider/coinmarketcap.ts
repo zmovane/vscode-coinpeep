@@ -1,8 +1,7 @@
 import * as vscode from "vscode";
 import * as path from "path";
 import request from "../utils/http";
-import BigNumber from "bignumber.js";
-const ZERO = new BigNumber("0");
+import { ZERO, Decimal } from "../utils/bignumber";
 export class CoinmarketcapProvider implements vscode.TreeDataProvider<Item> {
   private _onDidChangeTreeData: vscode.EventEmitter<
     Item | undefined | null | void
@@ -11,22 +10,21 @@ export class CoinmarketcapProvider implements vscode.TreeDataProvider<Item> {
     this._onDidChangeTreeData.event;
 
   private apiKey: string | undefined;
-  private extensionName: string;
+  private extensionID: string;
   private stableCoin = "USDT";
   private httpUrl = "https://pro-api.coinmarketcap.com/v1";
 
   constructor(
     extensionID: string,
-    extensionName: string,
     apiKey: string | undefined
   ) {
     this.apiKey = apiKey;
-    this.extensionName = extensionName;
+    this.extensionID = extensionID;
 
     if (!this.apiKey) {
       vscode.window
         .showInformationMessage(
-          `${extensionName}: Please enter your CoinMarketCap API Key `,
+          `${extensionID}: Please enter your CoinMarketCap API Key `,
           "Add API Key"
         )
         .then((selection) => {
@@ -71,15 +69,15 @@ export class CoinmarketcapProvider implements vscode.TreeDataProvider<Item> {
       return result.data.map((coin: Coin) => this._fillItem(coin));
     } else {
       vscode.window.showErrorMessage(
-        `${this.extensionName}: Failed to request CoinMarketCap API`
+        `${this.extensionID}: Failed to request CoinMarketCap API`
       );
     }
     return [];
   }
 
   private _fillItem(coin: Coin): Item {
-    const price = new BigNumber(coin.quote.USDT.price).precision(6);
-    const percent = new BigNumber(coin.quote.USDT.percent_change_24h);
+    const price = new Decimal(coin.quote.USDT.price).precision(6);
+    const percent = new Decimal(coin.quote.USDT.percent_change_24h);
     const percentPrefix = percent.gte(ZERO) ? "+" : "";
     const percentDisplay = `${percentPrefix}${percent.toFixed(2)}%`.padEnd(15);
     const symbolDisplay = coin.symbol.padEnd(11);

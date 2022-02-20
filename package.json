@@ -11,6 +11,7 @@
     "Other"
   ],
   "activationEvents": [
+    "onView:coingeckoTreeView",
     "onView:coinmarketcapTreeView"
   ],
   "main": "./out/extension.js",
@@ -47,10 +48,22 @@
           "light": "resources/light/refresh.svg",
           "dark": "resources/dark/refresh.svg"
         }
+      },
+      {
+        "command": "coingeckoTreeView.refreshEntry",
+        "title": "Refresh",
+        "icon": {
+          "light": "resources/light/refresh.svg",
+          "dark": "resources/dark/refresh.svg"
+        }
       }
     ],
     "views": {
       "coinpeep": [
+        {
+          "id": "coingeckoTreeView",
+          "name": "coingecko"
+        },
         {
           "id": "coinmarketcapTreeView",
           "name": "coinmarketcap"
@@ -62,6 +75,11 @@
         {
           "command": "coinmarketcapTreeView.refreshEntry",
           "when": "view == coinmarketcapTreeView",
+          "group": "navigation"
+        },
+        {
+          "command": "coingeckoTreeView.refreshEntry",
+          "when": "view == coingeckoTreeView",
           "group": "navigation"
         }
       ]

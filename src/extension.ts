@@ -1,21 +1,30 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode";
+import { CoingeckoProvider } from "./provider/coingecko";
 import { CoinmarketcapProvider } from "./provider/coinmarketcap";
+import { tradingviewEmbedded } from "./template/tradingview";
 import ReusedWebviewPanel from "./webview/ReusedWebviewPanel";
 
-const extensionName: string = "coinpeep";
-const extensionID: string = "amovane.coinpeep";
+const extensionID: string = "coinpeep";
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+  setupCoingeckoComponents();
+  setupCoinmarketcapComponents();
+  // call the constructor again if the configuration changes
+  context.subscriptions.push(
+    vscode.workspace.onDidChangeConfiguration(setupCoinmarketcapComponents)
+  );
+}
+
+function setupCoinmarketcapComponents() {
   const apiKey: string | undefined = vscode.workspace
     .getConfiguration("extensionName")
     .get("coinmarketcap.apiKey");
 
   const coinmarketcapProvider = new CoinmarketcapProvider(
     extensionID,
-    extensionName,
     apiKey
   );
 
@@ -31,51 +40,37 @@ export function activate(context: vscode.ExtensionContext) {
   vscode.commands.registerCommand(
     "coinmarketcapTreeView.clickItem",
     (symbol) => {
-      const panel = ReusedWebviewPanel.create(
-        "TradingView",
-        "TradingView",
-        vscode.ViewColumn.One,
-        {
-          enableScripts: true,
-        }
-      );
-      const exName = "BINANCE";
-
-      panel.webview.html = `<!DOCTYPE html>
-	  <html>
-		<head>
-		  <meta charset="UTF-8" />
-		  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		  <title>TradingView</title>
-		</head>
-		<body>
-			<div class="tradingview-widget-container">
-			<div id="tradingview_3d0b8"></div>
-			<div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/symbols/${symbol}/?exchange=${exName}" rel="noopener" target="_blank"><span class="blue-text">${symbol} Chart</span></a> by TradingView</div>
-			<script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
-			<script type="text/javascript">
-			new TradingView.widget(
-			{
-			"width": 980,
-			"height": 610,
-			"symbol": "${exName}:${symbol}",
-			"interval": "D",
-			"timezone": "Etc/UTC",
-			"theme": "light",
-			"style": "1",
-			"locale": "en",
-			"toolbar_bg": "#f1f3f6",
-			"enable_publishing": false,
-			"allow_symbol_change": true,
-			"container_id": "tradingview_3d0b8"
-			}
-			);
-			</script>
-			</div>
-		</body>
-	  </html>`;
+      createWebviewPannel([symbol, "BINANCE"]);
     }
   );
+}
+
+function setupCoingeckoComponents() {
+  const coingeckoProvider = new CoingeckoProvider(extensionID);
+  vscode.window.registerTreeDataProvider(
+    "coingeckoTreeView",
+    coingeckoProvider
+  );
+  vscode.commands.registerCommand("coingeckoTreeView.refreshEntry", () =>
+    coingeckoProvider.refresh()
+  );
+
+  vscode.commands.registerCommand("coingeckoTreeView.clickItem", (symbol) => {
+    createWebviewPannel([symbol, "BINANCE"]);
+  });
+}
+
+function createWebviewPannel(args: string[]) {
+  const panel = ReusedWebviewPanel.create(
+    "TradingView",
+    "TradingView",
+    vscode.ViewColumn.One,
+    {
+      enableScripts: true,
+    }
+  );
+  const [symbol, exName] = args;
+  panel.webview.html = tradingviewEmbedded(symbol, exName);
 }
 
 // this method is called when your extension is deactivated
