@@ -7,6 +7,8 @@ A vscode extension for help to take a quick peep of cryptocurrency prices as you
 
 ![](art/demo.gif)
 
+## Install 
+via [Marketplace](https://marketplace.visualstudio.com/items?itemName=amovane.coinpeep)
 ## Features ✨
 
 - Using [CoinGecko](https://www.coingecko.com/) and [CoinMarketCap](https://coinmarketcap.com/) to fetch cryptocurrency prices.
