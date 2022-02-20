@@ -1,14 +1,18 @@
 # README
 
-### Coinpeep
+<h3 align="center"> Coinpeep <h3>
+<p align="center"> 
+<img src="resources/icon.png" with=100 height=100></img>
+</p>
 
-A vscode extension for help to take a quick peep of cryptocurrency prices as you code.
-
+<h3 align="center">A vscode extension for help to take a quick peep of cryptocurrency prices as you code.</h3>
 
 ![](art/demo.gif)
 
-## Install 
+## Install
+
 via [Marketplace](https://marketplace.visualstudio.com/items?itemName=amovane.coinpeep)
+
 ## Features ✨
 
 - Using [CoinGecko](https://www.coingecko.com/) and [CoinMarketCap](https://coinmarketcap.com/) to fetch cryptocurrency prices.
@@ -29,7 +33,15 @@ via [Marketplace](https://marketplace.visualstudio.com/items?itemName=amovane.co
 
 Initial release
 
-## Run locally
+## Icons
+
+- [Bitcoin icons](https://www.flaticon.com/free-icons/bitcoin) created by kerismaker - Flaticon
+
+- [Increase icons](https://www.flaticon.com/free-icons/increase) created by Freepik - Flaticon
+
+- [Decrease icons](https://www.flaticon.com/free-icons/decrease) created by Freepik - Flaticon
+
+## Debug
 
 - Open VS Code
 - npm install installation packages
