@@ -13,7 +13,8 @@ let looper: NodeJS.Timer | null = null;
 
 export function activate(context: vscode.ExtensionContext) {
   const confInterval: number =
-    vscode.workspace.getConfiguration(extensionID).get("refreshInterval") ?? 10;
+    vscode.workspace.getConfiguration(extensionID).get("refreshInterval") ??
+    DEFAULT_INTERVAL;
 
   const apiKey: string | undefined = vscode.workspace
     .getConfiguration(extensionID)
