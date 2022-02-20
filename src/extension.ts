@@ -9,7 +9,9 @@ import { StatusBar } from "./widget/statusbar";
 const MIN_INTERVAL: number = 3000;
 const MAX_INTERVAL: number = 20_000;
 const DEFAULT_INTERVAL: number = 10_000;
-const extensionID: string = "amovane.coinpeep";
+
+const extensionName: string = "coinpeep";
+const extensionID: string = `amovane.${extensionName}`;
 
 let looper: NodeJS.Timer | null = null;
 
@@ -39,20 +41,20 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.workspace.onDidChangeConfiguration(
       (e: vscode.ConfigurationChangeEvent) => {
-        if (e.affectsConfiguration(`${extensionID}.refreshInterval`)) {
+        if (e.affectsConfiguration(`${extensionName}.refreshInterval`)) {
           if (looper) {
             clearInterval(looper);
             looper = null;
             looper = setInterval(cronTask, intervalInMills);
           }
         }
-        if (e.affectsConfiguration(`${extensionID}.statusbar.enable`)) {
+        if (e.affectsConfiguration(`${extensionName}.statusbar.enable`)) {
           statusbar.toggle();
         }
-        if (e.affectsConfiguration(`${extensionID}.statusbar.coinIds`)) {
+        if (e.affectsConfiguration(`${extensionName}.statusbar.coinIds`)) {
           statusbar.updateCoinIds();
         }
-        if (e.affectsConfiguration(`${extensionID}.coinmarketcap.apiKey`)) {
+        if (e.affectsConfiguration(`${extensionName}.coinmarketcap.apiKey`)) {
           coinmarketcapProvider.updateAPIKey();
         }
       }
