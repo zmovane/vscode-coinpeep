@@ -66,21 +66,16 @@ export class CoingeckoProvider implements vscode.TreeDataProvider<Item> {
     const iconPath = percent.gt(ZERO)
       ? this._iconPath("up.png")
       : this._iconPath("down.png");
-    const pair = `${quote.symbol.toUpperCase()}${this.stableCoin}`;
-    return new Item(pair, label, iconPath, priceDisplay);
+    return new Item(quote.symbol, label, iconPath, priceDisplay);
   }
 
   private _iconPath(iconName: string): string {
     return path.join(__filename, "..", "..", "..", "resources", iconName);
   }
-
-  private _isOk(status: number) {
-    return status >= 200 && status < 300;
-  }
 }
 class Item extends vscode.TreeItem {
   constructor(
-    pair: string,
+    currency: string,
     label: string,
     iconPath: vscode.Uri | string,
     price: string
@@ -91,7 +86,7 @@ class Item extends vscode.TreeItem {
     this.command = {
       title: "Coingecko",
       command: "coingeckoTreeView.clickItem",
-      arguments: [pair],
+      arguments: [currency],
     };
   }
 }

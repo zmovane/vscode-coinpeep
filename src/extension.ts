@@ -5,6 +5,9 @@ import { tradingviewEmbedded } from "./template/tradingview";
 import { Config } from "./utils/config";
 import ReusedWebviewPanel from "./widget/webview/ReusedWebviewPanel";
 import { StatusBar } from "./widget/statusbar";
+import { Binance } from "./exchange/binance";
+import { OKX } from "./exchange/okx";
+import { Huobi } from "./exchange/huobi";
 
 const MIN_INTERVAL: number = 3000;
 const MAX_INTERVAL: number = 20_000;
@@ -69,8 +72,8 @@ function registerCoinmarketcapComponents(provider: CoinmarketcapProvider) {
   );
   vscode.commands.registerCommand(
     "coinmarketcapTreeView.clickItem",
-    (symbol) => {
-      createWebviewPannel([symbol, "BINANCE"]);
+    (currency) => {
+      createWebviewPannel(currency);
     }
   );
 }
@@ -80,22 +83,35 @@ function registerCoingeckoComponents(provider: CoingeckoProvider) {
   vscode.commands.registerCommand("coingeckoTreeView.refreshEntry", () =>
     provider.refresh()
   );
-  vscode.commands.registerCommand("coingeckoTreeView.clickItem", (symbol) => {
-    createWebviewPannel([symbol, "BINANCE"]);
+  vscode.commands.registerCommand("coingeckoTreeView.clickItem", (currency) => {
+    createWebviewPannel(currency);
   });
 }
 
-function createWebviewPannel(args: string[]) {
-  const panel = ReusedWebviewPanel.create(
-    "TradingView",
-    "TradingView",
-    vscode.ViewColumn.One,
-    {
-      enableScripts: true,
+const stableCoins = ["USDT", "USD", "USDC", "HUSD", "BUSD"];
+const exs = [new Binance(), new OKX(), new Huobi()];
+async function createWebviewPannel(currency: string) {
+  if (stableCoins.includes(currency.toUpperCase())) {
+    return;
+  }
+  Promise.any(exs.map((ex) => ex.getTicker(ex.pairOf(currency)))).then(
+    (ticker) => {
+      if (ticker) {
+        const panel = ReusedWebviewPanel.create(
+          "TradingView",
+          "TradingView",
+          vscode.ViewColumn.One,
+          {
+            enableScripts: true,
+          }
+        );
+        panel.webview.html = tradingviewEmbedded(
+          `${currency.toUpperCase()}USDT`,
+          ticker.exName.toUpperCase()
+        );
+      }
     }
   );
-  const [symbol, exName] = args;
-  panel.webview.html = tradingviewEmbedded(symbol, exName);
 }
 
 // this method is called when your extension is deactivated
