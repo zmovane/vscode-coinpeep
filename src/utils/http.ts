@@ -1,4 +1,10 @@
-import { Axios, AxiosRequestConfig, AxiosRequestHeaders, Method } from "axios";
+import {
+  Axios,
+  AxiosRequestConfig,
+  AxiosRequestHeaders,
+  AxiosResponse,
+  Method,
+} from "axios";
 
 const client = new Axios({ timeout: 10000 });
 async function request(
@@ -31,4 +37,8 @@ async function request(
   return await client.request(requestConf);
 }
 
-export default request;
+function isOK(response: AxiosResponse, otherCondition: Function = () => true) {
+  return response.status >= 200 && response.status < 300 && otherCondition();
+}
+
+export { request, isOK };

@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import * as path from "path";
-import request from "../utils/http";
+import {request, isOK} from "../utils/http";
 import { ZERO, Decimal } from "../utils/bignumber";
 import { Quote } from "../entity/coingecko";
 export class CoingeckoProvider implements vscode.TreeDataProvider<Item> {
@@ -44,7 +44,7 @@ export class CoingeckoProvider implements vscode.TreeDataProvider<Item> {
       {}
     );
     const result: Quote[] = JSON.parse(response.data);
-    if (this._isOk(response.status)) {
+    if (isOK(response)) {
       return result.map((quote: Quote) => this._fillItem(quote));
     } else {
       vscode.window.showErrorMessage(

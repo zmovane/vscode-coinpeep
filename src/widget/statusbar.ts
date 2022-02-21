@@ -1,6 +1,6 @@
 import { StatusBarAlignment, StatusBarItem, window } from "vscode";
 import { Config } from "../utils/config";
-import request from "../utils/http";
+import { request, isOK } from "../utils/http";
 import { Quote } from "../entity/coingecko";
 const DEFAULT_COIN_IDS = ["bitcoin", "ethereum"];
 export class StatusBar {
@@ -68,7 +68,7 @@ export class StatusBar {
       data,
       {}
     );
-    if (this._isOk(response.status)) {
+    if (isOK(response)) {
       const quotes: Quote[] = JSON.parse(response.data);
       return quotes;
     }

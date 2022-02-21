@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import * as path from "path";
-import request from "../utils/http";
+import { request, isOK } from "../utils/http";
 import { ZERO, Decimal } from "../utils/bignumber";
 import { Coin, Response } from "../entity/coinmarketcap";
 import { Config } from "../utils/config";
@@ -69,7 +69,7 @@ export class CoinmarketcapProvider implements vscode.TreeDataProvider<Item> {
       header
     );
     const result: Response<Coin> = JSON.parse(response.data);
-    if (this._isOk(response.status, () => result.status.error_code === 0)) {
+    if (isOK(response, () => result.status.error_code === 0)) {
       return result.data.map((coin: Coin) => this._fillItem(coin));
     } else {
       vscode.window.showErrorMessage(
@@ -99,9 +99,6 @@ export class CoinmarketcapProvider implements vscode.TreeDataProvider<Item> {
     return path.join(__filename, "..", "..", "..", "resources", iconName);
   }
 
-  private _isOk(status: number, otherCond: Function) {
-    return status >= 200 && status < 300 && otherCond();
-  }
 }
 
 class Item extends vscode.TreeItem {
