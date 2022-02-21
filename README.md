@@ -9,7 +9,7 @@
 
 ![](art/demo.gif)
 
-## Install
+## Installation
 
 via [Marketplace](https://marketplace.visualstudio.com/items?itemName=amovane.coinpeep)
 
