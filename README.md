@@ -33,6 +33,11 @@ via [Marketplace](https://marketplace.visualstudio.com/items?itemName=amovane.co
 
 Initial release
 
+### 0.0.2
+Add extension icon
+### 0.0.3
+Fix known issue: invalid arguments pass into embedded tradingview
+
 ## Icons
 
 - [Bitcoin icons](https://www.flaticon.com/free-icons/bitcoin) created by kerismaker - Flaticon
@@ -41,7 +46,7 @@ Initial release
 
 - [Decrease icons](https://www.flaticon.com/free-icons/decrease) created by Freepik - Flaticon
 
-## Debug
+## Development 
 
 - Open VS Code
 - npm install installation packages

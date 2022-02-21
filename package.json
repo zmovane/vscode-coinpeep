@@ -2,7 +2,7 @@
   "name": "coinpeep",
   "displayName": "Coinpeep",
   "description": "A vscode extension for help to take a quick peep of cryptocurrency prices as you code",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "publisher": "amovane",
   "icon":"resources/icon.png",
   "engines": {
@@ -41,12 +41,12 @@
         },
         "coinpeep.statusbar.enable": {
           "type": "boolean",
-          "description": "Display statusbar",
+          "description": "Display on statusbar",
           "default": true
         },
         "coinpeep.statusbar.coinIds": {
           "type": "array",
-          "description": "Prices show in statusbar (default coin ids is [\"bitcoin\",\"ethereum\"])\n# coin id is use for coingecko API, just find what you need on https://api.coingecko.com/api/v3/coins/list",
+          "description": "Prices show on statusbar (default coin ids is [\"bitcoin\",\"ethereum\"])\n# coin id is use for coingecko API, just find what you need on https://api.coingecko.com/api/v3/coins/list",
           "default": [
             "bitcoin",
             "ethereum"
