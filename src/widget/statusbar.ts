@@ -75,7 +75,4 @@ export class StatusBar {
     return [];
   }
 
-  private _isOk(status: number) {
-    return status >= 200 && status < 300;
-  }
 }

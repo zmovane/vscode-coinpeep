@@ -16,6 +16,11 @@ const DEFAULT_INTERVAL: number = 10_000;
 const extensionName: string = "coinpeep";
 const extensionID: string = `amovane.${extensionName}`;
 
+const commandRefreshInterval = `${extensionName}.refreshInterval`;
+const commandToggleStatusbar = `${extensionName}.statusbar.enable`;
+const commandUpdateCoinIds = `${extensionName}.statusbar.coinIds`;
+const commandUpdateCoinmarketcapApiKey = `${extensionName}.coinmarketcap.apiKey`;
+
 let looper: NodeJS.Timer | null = null;
 
 export function activate(context: vscode.ExtensionContext) {
@@ -44,20 +49,17 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.workspace.onDidChangeConfiguration(
       (e: vscode.ConfigurationChangeEvent) => {
-        if (e.affectsConfiguration(`${extensionName}.refreshInterval`)) {
-          if (looper) {
-            clearInterval(looper);
-            looper = null;
-            looper = setInterval(cronTask, intervalInMills);
-          }
+        if (e.affectsConfiguration(commandRefreshInterval)) {
+          clearLooper();
+          looper = setInterval(cronTask, intervalInMills);
         }
-        if (e.affectsConfiguration(`${extensionName}.statusbar.enable`)) {
+        if (e.affectsConfiguration(commandToggleStatusbar)) {
           statusbar.toggle();
         }
-        if (e.affectsConfiguration(`${extensionName}.statusbar.coinIds`)) {
+        if (e.affectsConfiguration(commandUpdateCoinIds)) {
           statusbar.updateCoinIds();
         }
-        if (e.affectsConfiguration(`${extensionName}.coinmarketcap.apiKey`)) {
+        if (e.affectsConfiguration(commandUpdateCoinmarketcapApiKey)) {
           coinmarketcapProvider.updateAPIKey();
         }
       }
@@ -114,10 +116,14 @@ async function createWebviewPannel(currency: string) {
   );
 }
 
-// this method is called when your extension is deactivated
-export function deactivate() {
+function clearLooper() {
   if (looper) {
     clearInterval(looper);
     looper = null;
   }
+}
+
+// this method is called when your extension is deactivated
+export function deactivate() {
+  clearLooper();
 }
