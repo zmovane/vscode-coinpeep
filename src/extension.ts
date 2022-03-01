@@ -90,7 +90,7 @@ function registerCoingeckoComponents(provider: CoingeckoProvider) {
   });
 }
 
-const stableCoins = ["USDT", "USD", "USDC", "HUSD", "BUSD"];
+const stableCoins = ["USDT", "USD"];
 const exs = [new Binance(), new OKX(), new Huobi()];
 async function createWebviewPannel(currency: string) {
   if (stableCoins.includes(currency.toUpperCase())) {
