@@ -16,8 +16,7 @@
     "url": "https://github.com/amovane/vscode-coinpeep"
   },
   "activationEvents": [
-    "onView:coingeckoTreeView",
-    "onView:coinmarketcapTreeView"
+    "*" 
   ],
   "main": "./out/extension.js",
   "contributes": {
