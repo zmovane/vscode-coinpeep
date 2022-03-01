@@ -38,6 +38,9 @@ Add extension icon
 ### 0.0.3
 Fix known issue: invalid arguments pass into embedded tradingview
 
+### 0.0.4
+Fix activation events 
+
 ## Icons
 
 - [Bitcoin icons](https://www.flaticon.com/free-icons/bitcoin) created by kerismaker - Flaticon
